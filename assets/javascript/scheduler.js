@@ -18,8 +18,11 @@
   var nextArrival = 0;
   var minutesAway = 0;
 
+
   $("#add-train").on("click", function() {
-      
+      console.log("Hello");
+       // Prevent the page from refreshing
+       event.preventDefault();
       // name = $("#employee-name-input").val().trim();
       // console.log(name);
       // role = $("#role-input").val().trim();
@@ -30,11 +33,11 @@
       trainName = $("#train-name").val().trim();
       destination = $("#destination").val().trim();
       firstTrainTime = $("#first-train-time").val().trim();
-      frequency = $("#frequency").val().trim();
-
-      // Prevent the page from refreshing
-      event.preventDefault();
-
+      frequency = parseInt($("#frequency").val().trim());
+      
+      var timeDifference = moment().diff(moment(firstTrainTime));
+      console.log("the time difference " + timeDifference);
+      
       // Saving Keys onto the databse
       //push() creates a new object
       database.ref().push({
@@ -54,6 +57,9 @@ database.ref().on("child_added", function(childSnapShot){
 
   console.log(childSnapShot.val());
 
+      // var convertFrequency = moment(frequency, "m mm");
+      // console.log("convert frequency to minutes " + convertFrequency);
+  
   //reassign variables for onto firebase
   var trainName = childSnapShot.val().trainName;
   var destination = childSnapShot.val().destination;
@@ -61,10 +67,12 @@ database.ref().on("child_added", function(childSnapShot){
   var frequency = childSnapShot.val().frequency; 
 
 
+   
+      
 //displays each variable coming from firebase onto html
 //<tr> = table <td> = cell inside a table
 $("#train-scheduler ").append("<tr><td>" + trainName + "</td><td>" +  destination + "</td><td>"
-  + frequency + "</td><td>");
+  + frequency + "</td><td>" + firstTrainTime + "</td><td>");
 
 
 });
