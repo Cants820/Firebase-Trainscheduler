@@ -20,7 +20,8 @@
 
 
   $("#add-train").on("click", function() {
-      console.log("Hello");
+
+      console.log("Hello I'm a listener"); //on click listener
        // Prevent the page from refreshing
        event.preventDefault();
       // name = $("#employee-name-input").val().trim();
@@ -34,10 +35,35 @@
       destination = $("#destination").val().trim();
       firstTrainTime = $("#first-train-time").val().trim();
       frequency = parseInt($("#frequency").val().trim());
+      //next arrival is current time + frequency
       
-      var timeDifference = moment().diff(moment(firstTrainTime));
-      console.log("the time difference " + timeDifference);
+      var splitTime = firstTrainTime.split(":"); 
+      console.log("split first train " + splitTime);
+      var newTime = moment().hours(splitTime[0]).minutes(splitTime[1]).second(00);
+      // console.log("new time " + newTime);
       
+      var difference = (moment().diff(moment(newTime),"minutes"));
+      console.log(difference);  
+      //turn minutes into positive
+      //Math.abs(difference);
+      //console.log(Math.abs(difference));
+      
+      while(difference >  0) {
+      //adding newTime to frequency
+      newTime = moment(newTime).add(frequency,"minutes"); 
+      console.log("new time " + newTime);
+
+  
+      //subtracting the newtime (with frequency added) to current time    
+      difference = moment().diff(moment(newTime),"minutes");
+      console.log("new Diference " + difference);
+      //pushes the variable onto firebase
+      nextArrival = (newTime).format("hh:mm");
+      minutesAway = Math.abs(difference);
+      }
+
+
+
       // Saving Keys onto the databse
       //push() creates a new object
       database.ref().push({
@@ -65,14 +91,15 @@ database.ref().on("child_added", function(childSnapShot){
   var destination = childSnapShot.val().destination;
   var firstTrainTime = childSnapShot.val().firstTrainTime;
   var frequency = childSnapShot.val().frequency; 
-
+  var nextArrival = childSnapShot.val().nextArrival;
+  var minutesAway = childSnapShot.val().minutesAway;
 
    
       
 //displays each variable coming from firebase onto html
 //<tr> = table <td> = cell inside a table
 $("#train-scheduler ").append("<tr><td>" + trainName + "</td><td>" +  destination + "</td><td>"
-  + frequency + "</td><td>" + firstTrainTime + "</td><td>");
+  + frequency + "</td><td>" + nextArrival + "</td><td>" + minutesAway + "</td><td>" );
 
 
 });
