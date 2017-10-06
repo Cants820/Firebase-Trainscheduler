@@ -35,7 +35,7 @@
       destination = $("#destination").val().trim();
       firstTrainTime = $("#first-train-time").val().trim();
       frequency = parseInt($("#frequency").val().trim());
-      //next arrival is current time + frequency
+      
       
       var splitTime = firstTrainTime.split(":"); 
       console.log("split first train " + splitTime);
@@ -50,15 +50,18 @@
       
       while(difference >  0) {
       //adding newTime to frequency
+      //next arrival = first train time + frequency
       newTime = moment(newTime).add(frequency,"minutes"); 
       console.log("new time " + newTime);
 
   
       //subtracting the newtime (with frequency added) to current time    
+      //minutes away = current - newTime  
       difference = moment().diff(moment(newTime),"minutes");
       console.log("new Diference " + difference);
       //pushes the variable onto firebase
       nextArrival = (newTime).format("hh:mm");
+      //when first train time is greater than current time, get the absolute value of the time away.
       minutesAway = Math.abs(difference);
       }
 
@@ -99,7 +102,7 @@ database.ref().on("child_added", function(childSnapShot){
 //displays each variable coming from firebase onto html
 //<tr> = table <td> = cell inside a table
 $("#train-scheduler ").append("<tr><td>" + trainName + "</td><td>" +  destination + "</td><td>"
-  + frequency + "</td><td>" + nextArrival + "</td><td>" + minutesAway + "</td><td>" );
+  + frequency + "</td><td>" + nextArrival + "</td><td>" + minutesAway + "</td><td></tr>" );
 
 
 });
