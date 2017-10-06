@@ -3,3 +3,10 @@
   color:white;
 }
 
+td {
+  padding:6px;
+  margin-left: 1px;
+}
+th {
+  margin-right:2px;
+}
